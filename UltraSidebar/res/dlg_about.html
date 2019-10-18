@@ -1,0 +1,74 @@
+<!-- OmniView:on, console:off -->
+<html>
+<head>
+	<title>About Sticky Notes</title>
+	
+	<style>
+		@import url(css/global.css);
+
+		html { size: 640px 440px; font-size: 14px; }
+		body { margin: 0; background: #f7f7f7; }
+
+		@media os-vendor=="Apple"
+		{
+			html { font-size: 13px; }
+		}
+
+		main
+		{
+			padding: 22px 19px;
+			flow: grid(1 2, 3 3);
+			border-spacing: 30px;
+		}
+
+		div { width: *; }
+		dl { flow: row(dt, dd); width: 300px; }
+		dt { width: 80px; }
+		dd { width: *; color: gray; }
+
+		p { color: gray; }
+	</style>
+
+	<script type="text/tiscript">
+		Utils.installLinkHandler(self);
+
+		self.on("keydown", function(evt) {
+			if(evt.keyCode == Event.VK_ESCAPE)
+			{
+				view.close();
+				return true;
+			}
+		});
+
+		if(!Utils.InDbgView)
+		{
+			var obj_build = view.parent.Host_AppVersion();
+			self#build-ver.text = obj_build.ver;
+			self#build-dt.text = obj_build.dt.toLocaleString();
+			self#sciter-ver.text = Utils.SciterVersion;
+		}
+	</script>
+</head>
+
+<body>
+	<img src="img/banner.png" />
+
+	<main>
+		<dl>
+			<dt>Version:</dt>
+			<dd #build-ver>-</dd>
+			<dt>Build date:</dt>
+			<dd #build-dt>-</dd>
+			<dt>Sciter lib:</dt>
+			<dd #sciter-ver>-</dd>
+		</dl>
+
+		<div>
+			<img src="img/logo_mi.png" /><br />
+			Visit us at <a href="http://misoftware.com.br">http://misoftware.com.br/</a>
+		</div>
+
+		<p>This Application uses <b>Sciter Engine</b>, copyright Terra Informatica Software, Inc. (<a href="http://sciter.com/">http://sciter.com/</a>).</p>
+	</main>
+</body>
+</html>

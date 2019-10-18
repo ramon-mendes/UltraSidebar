@@ -1,0 +1,26 @@
+﻿self#mi-colors.on("click", "div", function(evt) {
+	UI.SetClr(evt.target.index);
+});
+
+self#mi-quit.onClick = ::view.Host_Quit();
+self#mi-quit.$(accesskey).html = Utils.IsOSX ? "⌘ + Q" : "Ctrl + Q";
+
+if(Utils.IsWindows && !Utils.InDBGView)
+{
+	self#mi-runstart.on("mouseup", function(evt) {
+		var el_btn = this.$(button);
+		el_btn.state.checked = !el_btn.state.checked;
+		view.Host_RunRegistry(el_btn.state.checked);
+		return true;
+	});
+
+	self#mi-runstart.$(button).state.checked = view.Host_IsRegistryRun();
+}
+
+self#mi-about.onClick = function() {
+	this.closePopup();
+	view.dialog({
+		url: self.url("dlg_about.html"),
+		alignment: 5
+	});
+};

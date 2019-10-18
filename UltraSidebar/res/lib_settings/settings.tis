@@ -1,0 +1,53 @@
+namespace Settings
+{
+	const cNAME = "UltraSidebar";
+	const cPATH = System.path(#USER_APPDATA) + "/settings-" + cNAME + ".json";
+	const cVERSION = 0x1;
+	var ns_data;
+	
+	function RestoreWork()// read settings
+	{
+		//stdout.println(cPATH);
+
+		var stream = Stream.openFile(cPATH, "r");
+		
+		if(stream)
+		{
+			try
+			{
+				ns_data = parseData(stream);
+				//log("RestoreWork data");
+			} catch(e) {
+				//log("RestoreWork failed!");
+			}
+			stream.close();
+		} else {
+			//log("RestoreWork failed to open " + cPATH);
+		}
+		
+		View["settings-" + cNAME] = ns_data = ns_data || {};
+	}
+	
+	function StoreWork()
+	{
+		var stream = Stream.openFile(cPATH, "w+");
+		assert(stream);
+		
+		ns_data.version = cVERSION;
+		stream.printf("%V\n", ns_data);
+		stream.close();
+	}
+
+	function ResetData()
+	{
+		ns_data.dic_notes = {};
+		StoreWork();
+	}
+}
+
+if(!View["settings-" + Settings.cNAME] || Utils.InDBGView)
+{
+	Settings.RestoreWork();
+}
+
+Settings.ns_data = View["settings-" + Settings.cNAME];

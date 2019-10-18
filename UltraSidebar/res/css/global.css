@@ -1,0 +1,4 @@
+html { font-family: system; }
+
+vflow { display: block; flow: vertical; }
+hflow { display: block; flow: horizontal; }
