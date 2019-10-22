@@ -1,0 +1,15 @@
+@font-face
+{
+	font-family: us-436056;
+	font-style: normal;
+	src: url(us.ttf);
+}
+
+i[class*=icon-]
+{
+	display: inline-block;
+	font-family: us-436056;
+	font-size: 1.20em;
+	font-style: normal;
+}
+i.icon-coffee { content: '\f0f4'; }

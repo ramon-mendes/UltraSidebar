@@ -1,4 +1,10 @@
-html { font-family: system; }
+html { font-family: system; background: #202020; }
+body { margin: 0; }
 
 vflow { display: block; flow: vertical; }
 hflow { display: block; flow: horizontal; }
+
+header
+{
+	background: #333333;
+}

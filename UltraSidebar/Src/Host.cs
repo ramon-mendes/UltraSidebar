@@ -15,10 +15,7 @@ namespace UltraSidebar
 {
 	class HostEvh : SciterEventHandler
 	{
-		private static List<HostEvh> _instances = new List<HostEvh>();
-		private SidebarWindow _wnd;
-
-		public HostEvh() { _instances.Add(this); }
+		private MainWindow _wnd;
 
 		public void Host_Dbg(SciterValue[] args)
 		{

@@ -14,8 +14,18 @@ using PInvoke;
 
 namespace UltraSidebar
 {
+	class SciterMessages : SciterDebugOutputHandler
+	{
+		protected override void OnOutput(SciterXDef.OUTPUT_SUBSYTEM subsystem, SciterXDef.OUTPUT_SEVERITY severity, string text)
+		{
+			Console.WriteLine(text);
+			//Debug.Write(text);// so I can see Debug output even if 'native debugging' is off
+		}
+	}
+
 	class Program
 	{
+		private static SciterMessages sm = new SciterMessages();
 		public static Hooker HookerInstance = new Hooker();
 		public static MainWindow WndMain;
 
@@ -44,17 +54,20 @@ namespace UltraSidebar
 
 			// Create the window
 			var wnd = WndMain = new MainWindow();
-			wnd.CreateMainWindow(200, 200);
+			wnd.CreateMainWindow(800, 600, SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_ALPHA | SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_ENABLE_DEBUG);
 			wnd.CreateTaskbarIcon();
 			wnd.CreateJumplists();
 			wnd.Title = MainWindow.WND_TITLE;
+			wnd.CenterTopLevelWindow();
 			wnd.Show();
 
 			// Prepares SciterHost and then load the page
 			var host = new BaseHost();
 			host.Setup(wnd);
 			host.AttachEvh(new HostEvh());
-			host.SetupPage("index.html");
+			host.RegisterBehaviorHandler(typeof(AreaChart));
+			//host.SetupPage("index.html");
+			host.SetupPage("widgets/dolar.html");
 
 			HookerInstance.SetMessageHook();
 
@@ -65,7 +78,6 @@ namespace UltraSidebar
 			}
 
 			//MainWindow.SendJumplistCmd("BringToFront");
-			//wnd.CreateNote();
 
 			// Run message loop
 			PInvokeUtils.RunMsgLoop();

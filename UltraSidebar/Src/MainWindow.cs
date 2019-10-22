@@ -28,6 +28,49 @@ namespace UltraSidebar
 		const   uint WM_APP = 0x8000;
 		const	uint WM_DESKTOP_CHANGED = WM_APP + 99;
 
+		protected override bool ProcessWindowMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam, ref IntPtr lResult)
+		{
+			foreach(var item in _cmd2jumplist_msg)
+			{
+				if(msg == item.Value)
+				{
+				}
+			}
+
+
+			if(msg == WM_TASKBAR_CREATED)
+			{
+				Program.HookerInstance.SetMessageHook();
+				return true;
+			}
+
+			if(msg == WM_DESKTOP_CHANGED)
+			{
+				if(wParam.ToInt32() == 0)
+				{
+					ShowIt(true);
+					Debug.WriteLine("WM_DESKTOP_CHANGED show " + DateTime.Now);
+				}
+				else
+				{
+					ShowIt(false);
+					Debug.WriteLine("WM_DESKTOP_CHANGED hide " + DateTime.Now);
+				}
+				return true;
+			}
+
+			if(msg == (uint)User32.WindowMessage.WM_ENDSESSION)
+			{
+				// system is shuting down, close app
+				User32.SendMessage(_hwnd, User32.WindowMessage.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+				User32.PostQuitMessage(0);
+				return true;
+			}
+
+			return false;
+		}
+
+
 		public static void SendJumplistCmd(string cmd)
 		{
 			var wnd = User32.FindWindow(null, WND_TITLE);
@@ -106,48 +149,6 @@ namespace UltraSidebar
 			_ni.Dispose();
 		}
 
-		protected override bool ProcessWindowMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam, ref IntPtr lResult)
-		{
-			foreach(var item in _cmd2jumplist_msg)
-			{
-				if(msg == item.Value)
-				{
-				}
-			}
-		
-
-			if(msg==WM_TASKBAR_CREATED)
-			{
-				Program.HookerInstance.SetMessageHook();
-				return true;
-			}
-
-			if(msg == WM_DESKTOP_CHANGED)
-			{
-				if(wParam.ToInt32() == 0)
-				{
-					ShowIt(true);
-					Debug.WriteLine("WM_DESKTOP_CHANGED show " + DateTime.Now);
-				}
-				else
-				{
-					ShowIt(false);
-					Debug.WriteLine("WM_DESKTOP_CHANGED hide " + DateTime.Now);
-				}
-				return true;
-			}
-
-			if(msg == (uint)User32.WindowMessage.WM_ENDSESSION)
-			{
-				// system is shuting down, close app
-				User32.SendMessage(_hwnd, User32.WindowMessage.WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
-				User32.PostQuitMessage(0);
-				return true;
-			}
-			
-			return false;
-		}
-
 		private void ShowIt(bool show)
 		{
 			SetUltraTopmost(show);
@@ -158,6 +159,23 @@ namespace UltraSidebar
 		{
 			new Win32Hwnd(_hwnd).FocusAndActivate();
 				
+		}
+
+		public void EmulateMoveWnd()
+		{
+			SendMessageW(_hwnd, (uint)User32.WindowMessage.WM_NCLBUTTONDOWN, new IntPtr(HTCAPTION), IntPtr.Zero);
+		}
+
+		public void HideTaskbarIcon()
+		{
+			new Win32Hwnd(Handle).ModifyStyleEx(User32.SetWindowLongFlags.WS_EX_APPWINDOW, User32.SetWindowLongFlags.WS_EX_TOOLWINDOW);
+			return;
+
+			const int GWL_EXSTYLE = -20;
+			const int WS_EX_TOOLWINDOW = 0x00000080;
+			const int WS_EX_LAYERED = 0x00080000;
+
+			SetWindowLong(_hwnd, GWL_EXSTYLE, WS_EX_TOOLWINDOW);
 		}
 
 		#region PInvoke stuff

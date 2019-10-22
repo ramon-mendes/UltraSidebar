@@ -1,0 +1,12 @@
+icon
+{
+	display: block;
+	size: *;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	transform: scale(1, -1);
+	fill: black;
+	stroke: none;
+}
+icon.icon-coffee { background-image: url(path:M929 493q0 45-32 76t-76 31h-35v-214h35q45 0 76 31t32 76z m-929-429h1000q0-59-42-101t-101-42h-714q-59 0-101 42t-42 101z m1036 429q0-89-63-152t-152-62h-35v-18q0-52-37-88t-88-37h-393q-51 0-88 37t-37 88v410q0 15 11 26t25 10h642q89 0 152-63t63-151z); }

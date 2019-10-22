@@ -1,10 +1,35 @@
 <!-- OmniView:on -->
 <html>
+
 <head>
 	<script type="text/tiscript">
 		include "lib_settings/settings.tis";
 
-
+		var (width, height) = view.screenBox(#workarea, #dimension);
+		view.move(width - 400, 0, 400, height);
 	</script>
+
+	<style>
+		@import url(css/global.css);
+
+		header
+		{
+			flow: horizontal;
+			horizontal-align: right;
+		}
+
+		.btn { padding: 11px; height: *; }
+		.btn:hover { background: #3F3F41; }
+		img { fill: white; height: 15px; width: 15px; }
+	</style>
 </head>
+
+<body>
+	<header>
+		<div class="btn">
+			<img src="img/svg/window-close.svg" />
+		</div>
+	</header>
+</body>
+
 </html>
