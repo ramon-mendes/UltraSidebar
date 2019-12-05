@@ -1,6 +1,0 @@
-<project outputDir="..\OutConfused" baseDir=".\TmpInput" xmlns="http://confuser.codeplex.com">
-  <rule pattern="true" preset="minimum" inherit="false">
-    <protection id="rename" action="remove" />
-  </rule>
-  <module path="DesignArsenal.exe" />
-</project>

@@ -1,0 +1,53 @@
+<!-- OmniView:on -->
+<html>
+<head>
+	<style>
+		@import url(../css/widget.css);
+
+		body
+		{
+			flow: horizontal-flow;
+			padding: 10px;
+			border-spacing: 10px;
+		}
+
+		div
+		{
+			size: 70px;
+			padding: 3px;
+
+			flow: horizontal;
+			vertical-align: bottom;
+			behavior: shell-icon;
+			foreground-repeat: no-repeat;
+			foreground-position: 50% 5px;
+			-icon-size: "x-large";
+
+			border-radius: 3px;
+			border: solid 1.5px transparent;
+		}
+
+		div:hover
+		{
+			cursor: pointer;
+			border-color: #3ee6f7;
+		}
+	</style>
+
+	<script type="text/tiscript">
+		var exes = ["D:\\Utils\\rapidee.exe", "D:\\Utils\\rapidee.exe", "D:\\Utils\\rapidee.exe"];
+
+		for(var (i,v) in exes) {
+			var name = v %~ '\\';
+			$(body).$append(<div filename="{v}">{name}</div>);
+		}
+
+		self.on("click", "div", function() {
+			UtilsSidebar.ExecCmd(this.@#filename);
+		});
+	</script>
+</head>
+
+<body>
+</body>
+</html>

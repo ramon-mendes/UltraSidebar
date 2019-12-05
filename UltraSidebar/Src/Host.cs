@@ -7,48 +7,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
-using Microsoft.Win32;
-using System.Reflection;
-using PInvoke;
+using CliWrap;
 
 namespace UltraSidebar
 {
+	class Host : BaseHost
+	{
+	}
+
 	class HostEvh : SciterEventHandler
 	{
-		private MainWindow _wnd;
-
-		public void Host_Dbg(SciterValue[] args)
+		public void Host_ExecuteCmd(SciterValue[] args)
 		{
-		}
+			string cmd = args[0].Get("");
+			string cmd_args = args[1].Get("");
+			bool cmd_log = args[2].Get(false);
+			List<string> largs = new List<string>();
 
-		public SciterValue Host_NewGUID() => new SciterValue(Guid.NewGuid().ToString());
-		public SciterValue Host_AppVersion()
-		{
-			var result = new SciterValue();
-			result["ver"] = new SciterValue(Consts.Version);
-			result["dt"] = new SciterValue(File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location));
-			return result;
-		}
-		public void Host_EmulateMoveWnd() => _wnd.EmulateMoveWnd();
-		public void Host_Quit() => Program.Exit();
-
-
-#if WINDOWS
-		public SciterValue Host_IsRegistryRun()
-		{
-			RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run");
-			return new SciterValue(rkApp.GetValue(Consts.AppName) is string);
-		}
-
-		public void Host_RunRegistry(SciterValue[] args)
-		{
-			RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-			if(args[0].Get(false))
-				rkApp.SetValue(Consts.AppName, "\"" + Consts.APP_EXE + "\"");
+			if(cmd[1] != ':')
+			{
+				largs.Add("/c");
+				largs.Add(cmd);
+				largs.Add(cmd_args);
+				cmd = "cmd";
+			}
 			else
-				rkApp.DeleteValue(Consts.AppName, false);
+				largs.Add(cmd_args);
+
+			Task.Run(() =>
+			{
+				var r = Cli.Wrap(cmd).SetArguments(largs);
+
+				if(cmd_log)
+				{
+					//r.SetStandardOutputCallback(line => Program.AppHost.OutputLine(line));
+					//r.SetStandardErrorCallback(line => Program.AppHost.OutputLine(line));
+				}
+
+				var rr = r.Execute();
+				Debug.Assert(rr.ExitCode == 0);
+			});
 		}
-#endif
 	}
 
 	// This base class overrides OnLoadData and does the resource loading strategy
@@ -62,15 +61,11 @@ namespace UltraSidebar
 		protected SciterArchive _archive = new SciterArchive();
 		protected SciterWindow _wnd;
 
-		private static List<BaseHost> _instances = new List<BaseHost>();
-
 		public BaseHost()
 		{
-			_instances.Add(this);
-
 		#if !DEBUG
 			_archive.Open(SciterAppResource.ArchiveResource.resources);
-#endif
+		#endif
 		}
 
 		public void Setup(SciterWindow wnd)
@@ -82,7 +77,7 @@ namespace UltraSidebar
 		public void SetupPage(string page_from_res_folder)
 		{
 		#if DEBUG
-			string path = Path.GetDirectoryName(Consts.APP_EXE) + "/../../res/" + page_from_res_folder;
+			string path = Environment.CurrentDirectory + "/../../res/" + page_from_res_folder;
 			Debug.Assert(File.Exists(path));
             path = path.Replace('\\', '/');
 			path = Path.GetFullPath(path);

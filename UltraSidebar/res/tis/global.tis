@@ -1,0 +1,6 @@
+﻿namespace UtilsSidebar
+{
+	function ExecCmd(cmd, args = "", log = true) {
+		view.Host_ExecuteCmd(cmd, args, log);
+	}
+}

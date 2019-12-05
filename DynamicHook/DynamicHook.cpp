@@ -45,7 +45,7 @@ int HookProc(int nCode, WPARAM wParam, LPARAM lParam)
 				OutputDebugString(str.c_str());
 				
 
-				#define WND_NAME L"Sciter-based desktop Sticky notes"
+				#define WND_NAME L"Sciter-based desktop widgets --> ### UltraSidebar ###"
 
 				auto wnd = FindWindow(NULL, WND_NAME);
 				if (wnd)

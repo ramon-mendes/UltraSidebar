@@ -1,35 +1,60 @@
-<!-- OmniView:on -->
+<!-- OmniView -->
 <html>
-
 <head>
-	<script type="text/tiscript">
-		include "lib_settings/settings.tis";
-
-		var (width, height) = view.screenBox(#workarea, #dimension);
-		view.move(width - 400, 0, 400, height);
-	</script>
-
 	<style>
 		@import url(css/global.css);
+	</style>
+	
+	<script type="text/tiscript">
+		include "tis/global.tis";
 
-		header
-		{
-			flow: horizontal;
-			horizontal-align: right;
+		const WIDTH = 350;
+		var (width, height) = view.screenBox(#workarea, #dimension);
+
+		if(!Utils.InDBGView) {
+			view.move(width - WIDTH, 0, WIDTH, height);
 		}
 
-		.btn { padding: 11px; height: *; }
-		.btn:hover { background: #3F3F41; }
-		img { fill: white; height: 15px; width: 15px; }
-	</style>
+		self.onKey = function(evt) {
+			if(evt.keyCode==Event.VK_ESCAPE)
+				view.close();
+		};
+
+		self#btn-close.onClick = ::view.close();
+
+		$(section).state.current = true;
+
+		self.on("click", "section", function() {
+			this.state.current = true;
+		});
+
+		$$(frame).map(function(el) {
+			el.load(el.@#delay-src);
+		});
+	</script>
 </head>
 
 <body>
 	<header>
-		<div class="btn">
-			<img src="img/svg/window-close.svg" />
+		<div class="btn ml-s" #btn-close>
+			<img src="img/svg/android-close.svg" />
 		</div>
 	</header>
-</body>
 
+	<main>
+		<section>
+			<div .tit>Apps</div>
+			<content>
+				<frame delay-src="widgets/apps.html" />
+			</content>
+		</section>
+
+		<section>
+			<div .tit>Cotation</div>
+			<content>
+				<!--<frame src="widgets/dolar.html"></frame>-->
+			</content>
+		</section>
+	</main>
+</body>
 </html>

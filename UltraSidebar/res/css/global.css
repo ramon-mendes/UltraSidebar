@@ -1,10 +1,60 @@
-html { font-family: system; background: #202020; }
-body { margin: 0; }
+html { font-family: system; }
+body
+{
+	margin: 0;
+	background: #F5F5F5;
+}
 
 vflow { display: block; flow: vertical; }
 hflow { display: block; flow: horizontal; }
 
+.ml-s { margin-left: *; }
+
 header
 {
-	background: #333333;
+	flow: horizontal;
+	height: 40px;
+}
+header .btn { height: *; width: 40px; cursor: pointer; flow: horizontal; vertical-align: middle; horizontal-align: middle; }
+header .btn:hover { background: #CCCCCC; }
+header img { size: 14px; fill: #222222; }
+
+main
+{
+	size: *;
+	padding: 10px;
+}
+
+section
+{
+	style-set: Section;
+}
+
+@set Section
+{
+	:root
+	{
+	}
+	.tit
+	{
+		background: #EEEEEE;
+		padding: 8px;
+		border-left: solid 3px #00FF00;
+		margin-bottom: 2px;
+		cursor: pointer;
+		font-weight: 600;
+	}
+
+	content
+	{
+		display: block;
+		visibility: none;
+		height: *;
+	}
+	:root:current { height: *; }
+	:root:current content
+	{
+		background: red !important;
+		visibility: visible;
+	}
 }
