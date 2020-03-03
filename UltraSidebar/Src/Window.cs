@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SciterSharp;
-using SciterSharp.Interop;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Windows.Forms;
 using PInvoke;
+using UltraSidebar.Native;
+using SciterSharp;
+using SciterSharp.Interop;
 
 namespace UltraSidebar
 {
@@ -22,9 +24,40 @@ namespace UltraSidebar
 		const	uint WM_CLOSE = 16;
 		const	uint WM_NCLBUTTONDOWN = 161;
 		const	int HTCAPTION = 2;
+
+		private GlobalHotkeys _hotkey = new GlobalHotkeys();
+
+		public Window()
+		{
+			var wnd = this;
+
+			wnd.CreateMainWindow(100, 100, SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_MAIN | SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_ALPHA | SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_ENABLE_DEBUG);
+			wnd.HideTaskbarIcon();
+			wnd.Title = WND_TITLE;
+			wnd.Icon = Properties.Resources.IconMain;
+
+			// shortcut
+			_hotkey.RegisterGlobalHotKey((int)Keys.Oem102, GlobalHotkeys.MOD_WIN, wnd._hwnd);
+		}
 		
 		protected override bool ProcessWindowMessage(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam, ref IntPtr lResult)
 		{
+			if(msg == (uint)User32.WindowMessage.WM_HOTKEY)
+			{
+				var wpID = (short)wParam.ToInt32();
+				if(wpID == _hotkey.HotkeyID)
+				{
+					if(IsVisible && User32.GetForegroundWindow() == _hwnd)
+					{
+						Show(false);
+					}
+					else
+					{
+						//App.AppHost.CallFunction("View_Show", new SciterValue(tab));
+						//User32.SetForegroundWindow(_hwnd);
+					}
+				}
+			}
 			if(msg==WM_TASKBAR_CREATED)
 			{
 				Program.HookerInstance.SetMessageHook();

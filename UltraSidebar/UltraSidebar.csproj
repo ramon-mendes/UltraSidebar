@@ -75,6 +75,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -88,8 +89,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchiveResource.cs" />
+    <Compile Include="Src\Behavior\AreaChart.cs" />
+    <Compile Include="Src\Behavior\ChartBase.cs" />
     <Compile Include="Src\Hooker.cs" />
     <Compile Include="Src\Host.cs" />
+    <Compile Include="Src\Native\GlobalHotkeys.cs" />
     <Compile Include="Src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -136,13 +140,18 @@
     <Content Include="res\img\svg\android-close.svg" />
     <Content Include="res\img\us-font.css" />
     <Content Include="res\img\us-svg.css" />
-    <Content Include="res\lib_menu\menu-chrome.css" />
-    <Content Include="res\lib_menu\toggler2.css" />
-    <Content Include="res\lib_menu\unittes.html" />
+    <Content Include="res\lib_menu\icon-photoshop.svg" />
+    <Content Include="res\lib_menu\lib-menu.css" />
+    <Content Include="res\lib_menu\toggler-knob.svg" />
+    <Content Include="res\lib_menu\toggler.css" />
+    <Content Include="res\lib_menu\unittest2.html" />
+    <None Include="res\lib_menu\README.md" />
+    <Content Include="res\lib_menu\unittest.html" />
     <Content Include="res\lib_settings\unittest.html" />
     <Content Include="res\unittest.html" />
+    <Content Include="res\widgets\actions.html" />
     <Content Include="res\widgets\apps.html" />
-    <Content Include="res\widgets\dolar.html" />
+    <Content Include="res\widgets\currency.html" />
     <Content Include="sciter.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

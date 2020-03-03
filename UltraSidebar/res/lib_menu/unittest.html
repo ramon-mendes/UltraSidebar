@@ -1,0 +1,96 @@
+<html>
+
+<head>
+	<style>
+		@import url(lib-menu.css);
+	
+		body
+		{
+			font-size: 13dip;
+			font-family: system;
+		}
+	</style>
+
+	<script type="text/tiscript">
+		event click $(#btn-click)(evt) {
+			this.popup(self#menu, Utils.popupAttachment(9, 7));
+		}
+
+		event contextmenu $(#btn-rclick)(evt) {
+			this.popup(self#menu, Utils.popupAttachment(1, 7));
+		}
+
+		event ~mouseup $(#mi-item1)(evt) {
+			var el_btn = this.$(button);
+			el_btn.state.checked = !el_btn.state.checked;
+			return true;
+		}
+	</script>
+</head>
+
+<body>
+	<button #btn-click>Click to open - positioned at right</button>
+	<button #btn-rclick>Right-click to open - positioned at bottom</button>
+	
+	<menu .menu-chromed #menu>
+		<div .inner>
+			<caption>
+				A header grouping some itens
+			</caption>
+
+			<ul>
+				<li #mi-item1>
+					Item 1
+					<button|toggler2><label .true>On</label><label .false>Off</label></button>
+				</li>
+				<li #mi-item2>Item 2</li>
+				<li>Fullscreen<accesskey>F11</accesskey></li>
+				<li><img src="icon-photoshop.svg" width="15" /> Item with icon</li>
+
+				<hr />
+
+				<li>
+					Sub-menu1
+					<menu .sub-menu-chromed>
+						<div .inner>
+							<ul>
+								<li>Option 1</li>
+								<li>Option 2</li>
+							</ul>
+						</div>
+					</menu>
+				</li>
+
+				<li disabled>
+					Sub-menu2
+					<menu .sub-menu-chromed>
+						<div .inner>
+							<ul>
+								<li>Option 1</li>
+								<li>Option 2</li>
+							</ul>
+						</div>
+					</menu>
+				</li>
+			</ul>
+
+			<caption>Radios</caption>
+			<ul>
+				<li .radio>Radio 1</li>
+				<li .radio>Radio 2</li>
+				<li .radio>Radio 3</li>
+				<li .radio>Radio 4</li>
+			</ul>
+			
+			<caption>Another header</caption>
+			<ul>
+				<li>Fullscreen<accesskey>F11</accesskey></li>
+			</ul>
+			
+			<footer>
+				Exit<accesskey>Ctrl+Shift+B</accesskey>
+			</footer>
+		</div>
+	</menu>
+</body>
+</html>

@@ -30,7 +30,7 @@
 
 		$$(frame).map(function(el) {
 			el.load(el.@#delay-src);
-		});
+		}); 
 	</script>
 </head>
 
@@ -43,12 +43,18 @@
 
 	<main>
 		<section>
+			<div .tit>Actions</div>
+			<content>
+				<frame delay-src="widgets/actions.html" />
+			</content>
+		</section>
+
+		<section>
 			<div .tit>Apps</div>
 			<content>
 				<frame delay-src="widgets/apps.html" />
 			</content>
 		</section>
-
 		<section>
 			<div .tit>Cotation</div>
 			<content>

@@ -1,0 +1,27 @@
+<!-- OmniView:on -->
+<html>
+<head>
+	<style>
+		chart
+		{
+			behavior: AreaChart;
+			display: block;
+			size: 300px;
+			border: solid 1px;
+		}
+	</style>
+
+	<script type="text/tiscript">
+		self.request(function(data, status) {
+			log(data);
+			for(var (i,v) in data) {
+				$(chart).Host_AddMS(v.bid.toFloat());
+			}
+		}, #get, "https://economia.awesomeapi.com.br/json/list/USD-BRL/365");
+	</script>
+</head>
+
+<body>
+	<chart></chart>
+</body>
+</html>

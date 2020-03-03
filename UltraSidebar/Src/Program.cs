@@ -25,15 +25,12 @@ namespace UltraSidebar
 			
 			// Create the window
 			var wnd = WndGlobal = new Window();
-			wnd.CreateMainWindow(100, 100, SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_MAIN | SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_ALPHA | SciterXDef.SCITER_CREATE_WINDOW_FLAGS.SW_ENABLE_DEBUG);
-			wnd.HideTaskbarIcon();
-			wnd.Title = Window.WND_TITLE;
-			wnd.Icon = Properties.Resources.IconMain;
 
 			// Prepares SciterHost and then load the page
 			var host = AppHost = new Host();
 			host.Setup(wnd);
 			host.AttachEvh(new HostEvh());
+			host.RegisterBehaviorHandler(typeof(AreaChart));
 			host.SetupPage("index.html");
 			//host.SetupPage("widgets/dolar.html");
 

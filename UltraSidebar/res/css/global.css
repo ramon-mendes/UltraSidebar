@@ -35,6 +35,7 @@ section
 	:root
 	{
 	}
+
 	.tit
 	{
 		background: #EEEEEE;
@@ -47,10 +48,10 @@ section
 
 	content
 	{
-		display: block;
 		visibility: none;
-		height: *;
+		size: max-content;
 	}
+	frame { border: solid 2px blue; size: *; }
 	:root:current { height: *; }
 	:root:current content
 	{

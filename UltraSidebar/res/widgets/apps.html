@@ -3,15 +3,24 @@
 <head>
 	<style>
 		@import url(../css/widget.css);
+		@import url(../lib_menu/lib-menu.css);
 
 		body
 		{
+			prototype: FileDropZone;
+		}
+		body.active-target { foreground: rgba(233, 233, 233, 0.51); }
+
+		#list
+		{
+			size: *;
+
 			flow: horizontal-flow;
 			padding: 10px;
 			border-spacing: 10px;
 		}
 
-		div
+		.item
 		{
 			size: 70px;
 			padding: 3px;
@@ -23,11 +32,17 @@
 			foreground-position: 50% 5px;
 			-icon-size: "x-large";
 
+			overflow: hidden;
+			text-wrap: none;
+			text-overflow: path-ellipsis;
+			text-align: center;
+			font-size: 12px;
+
 			border-radius: 3px;
 			border: solid 1.5px transparent;
 		}
 
-		div:hover
+		.item:hover
 		{
 			cursor: pointer;
 			border-color: #3ee6f7;
@@ -35,19 +50,127 @@
 	</style>
 
 	<script type="text/tiscript">
-		var exes = ["D:\\Utils\\rapidee.exe", "D:\\Utils\\rapidee.exe", "D:\\Utils\\rapidee.exe"];
+		include "../lib_settings/settings.tis";
 
-		for(var (i,v) in exes) {
-			var name = v %~ '\\';
-			$(body).$append(<div filename="{v}">{name}</div>);
+		//Settings.ns_data.apps.paths = ["D:\\Utils\\rapidee.exe", "D:\\Utils\\rapidee.exe", "D:\\Utils\\rapidee.exe"];
+		//Settings.ns_data.apps.paths = [];
+
+		function RefreshList() {
+			self#list.clear();
+			for(var (i,v) in Settings.ns_data.arr_apps) {
+				var path = v.path;
+				var name = path %~ '/';
+				var el = self#list.$append(<div .item filename="{path}">{name}</div>);
+				el.data_obj = v;
+			}
+		}
+		RefreshList();
+
+		// .item click / run
+		event click $(.item)(evt) {
+			UtilsSidebar.ExecCmd(this.@#filename);
 		}
 
-		self.on("click", "div", function() {
-			UtilsSidebar.ExecCmd(this.@#filename);
-		});
+		// .item menu
+		var cur_data_obj;
+
+		event ~mouseup $(.item)(evt) {
+			if(evt.propButton) {
+				cur_data_obj = this.data_obj;
+				this.popup(self#menu, evt.xView, evt.y);
+				return true;
+			}
+			return false;
+		}
+
+		// menu li click
+		event click $(menu li)(evt) {
+			switch(this.@#cmd)
+			{
+				case "edit":
+					{
+						var text;
+						var res = view.msgbox(#question, "Cmd:" + "<br><input !text>", "Title", [#ok, #cancel], function(el_root) {
+							el_root.$(input).value = cur_data_obj.path;
+						}, function(el_root, id) {
+							if(id==#ok)
+							{
+								text = el_root.$(input).value.trim();
+								return text.length != 0;
+							}
+							return true;
+						});
+
+						if(res==#ok)
+						{
+							Settings.StoreWork();
+							RefreshList();
+						}
+					}
+					break;
+
+				case "rmv":
+					{
+						Settings.ns_data.arr_apps.removeByValue(cur_data_obj);
+						Settings.StoreWork();
+						RefreshList();
+					}
+					break;
+			}
+		}
+
+		// DnD
+		class FileDropZone : Element
+		{
+			function attached() {
+			}
+
+			event dragaccept(evt) {
+				//log(evt.draggingDataType);
+				//log(evt.exchangeData(#text));
+				return evt.draggingDataType == #file; // accept only files
+			}
+
+			event dragenter(evt) {
+				this.attributes.addClass("active-target");
+				return true;
+			}
+
+			event dragleave(evt) {
+				this.attributes.removeClass("active-target");
+				return true;
+			}
+
+			event drag(evt) {
+				return true;
+			}
+
+			event drop(evt) {
+				this.attributes.removeClass("active-target");
+
+				var path = evt.exchangeData(#file)[0];
+				path = path.replace(/\\/, "/").substr(7);// remove file://
+				Settings.ns_data.arr_apps.push({ path: path });
+				Settings.StoreWork();
+
+				RefreshList();
+
+				return true;
+			}
+		}
 	</script>
 </head>
 
 <body>
+	<menu .menu-chromed #menu>
+		<div .inner>
+			<ul>
+				<li cmd="edit">Edit</li>
+				<li cmd="rmv">Remove</li>
+			</ul>
+		</div>
+	</menu>
+
+	<div #list></div>
 </body>
 </html>

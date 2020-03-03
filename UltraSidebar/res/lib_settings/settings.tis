@@ -1,6 +1,6 @@
 namespace Settings
 {
-	const cNAME = "UltraSidebar";
+	const cNAME = "ultrasidebar";
 	const cPATH = System.path(#USER_APPDATA) + "/settings-" + cNAME + ".json";
 	const cVERSION = 0x1;
 	var ns_data;
@@ -36,18 +36,20 @@ namespace Settings
 		ns_data.version = cVERSION;
 		stream.printf("%V\n", ns_data);
 		stream.close();
-	}
-
-	function ResetData()
-	{
-		ns_data.dic_notes = {};
-		StoreWork();
+		
+		//stdout.printf("%V\n", ns_data);
+		//log("StoreWork");
+		//console.log(ns_data);
 	}
 }
+
 
 if(!View["settings-" + Settings.cNAME] || Utils.InDBGView)
 {
 	Settings.RestoreWork();
-}
 
+	// Create default data
+	if(!Settings.ns_data.arr_apps)
+		Settings.ns_data.arr_apps = [];
+}
 Settings.ns_data = View["settings-" + Settings.cNAME];
